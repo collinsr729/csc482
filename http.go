@@ -6,65 +6,35 @@ import (
 	// "log"
 	"net/http"
 	// "encoding/json"
-	"fmt"
+	// "fmt"
 	loggly "github/loggly"
 	gjson "github/gjson"
-	// "reflect"
+	"time"
 )
 
-	type Data struct{
-		// Response string
-		Response struct{
-			// Error string
-			Error struct{
-				Route string
-				Message string
-			}
-		}
-	}
 
 func main() {
-	//resp, err := http.Get("https://api.github.com/repos/collinsr729/csc482")
+	counter := 0
+	for counter<20{
+		counter += 1
 	resp, _ := http.Get("http://bus-time.centro.org/bustime/api/v3/getvehicles?key=jE6Q7MaB7MJMmRAwbB4yPXN4y&format=json&rt=OSW10")
-	// resp := `
-	// 	   {
- //        "bustime-response": {
- //                "error": [
- //                        {
- //                                "rt": "OSW10",
- //                                "msg": "No data found for parameter"
- //                        }
- //                ]
- //        }`
-// }
+	
 	defer resp.Body.Close()
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	
 	value := gjson.Get(string(body), "bustime-response.error.0.msg")
-	fmt.Println(value.Str)
+	lat := gjson.Get(string(body), "bustime-response.vehicle.0.lat")
+	lon := gjson.Get(string(body), "bustime-response.vehicle.0.lon")
+	vehicleID := gjson.Get(string(body), "bustime-response.vehicle.0.vid")
+	// fmt.Println(value.Str)
+	// fmt.Println(body)
 	client := loggly.New("MyApplication")
-	// client.EchoSend("info", "The api returned good stuff")
 	if(value.Str != ""){
 	client.EchoSend("error","The bustime api returned an error message of "+value.Str)
 	}else{
-		client.EchoSend("info", "The api returned good values")
+		client.EchoSend("info", "The api returned Bus "+vehicleID.Str+" is at:"+lat.Str+","+lon.Str)
 	}
-	// client.EchoSend("info", "The api returned good values")
-	// client.EchoSend("silly", "This is a silly test message")//This works
+	time.Sleep(time.Second*60)
+	}
 }
-
-
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// os.Stdout.Write(body)
-
-	// d := &Data{}
-	// err = json.Unmarshal([]byte(body), &d)
-	// if(err!=nil){
-	// 	log.Fatal(err)
-	// }
-
-	// fmt.Println(d)
-	// fmt.Println(d.Response.Error.Route)
