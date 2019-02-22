@@ -7,8 +7,8 @@ import (
 	"net/http"
 	// "encoding/json"
 	// "fmt"
-	loggly "github/loggly"
-	gjson "github/gjson"
+	loggly "github.com/jamespearly/loggly"
+	gjson "github.com/tidwall/gjson"
 	"time"
 )
 
