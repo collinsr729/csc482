@@ -30,7 +30,8 @@ type TableInfo struct{
 	recordCount int
 }
 
-func getall(w http.ResponseWriter, r *http.Request){
+func getall(w http.ResponseWriter, r *http.Request){   
+ fmt.Println("ALL PRINTING")
 	sess, err := session.NewSession(&aws.Config{
     Region: aws.String("us-east-1")},
 	)
@@ -97,6 +98,7 @@ json.NewEncoder(w).Encode(items)
 
 }
 func getstatus(w http.ResponseWriter, r *http.Request){
+    fmt.Println("STATUS PRINTINg")
 	sess, err := session.NewSession(&aws.Config{
     Region: aws.String("us-east-1")},
 	)
@@ -137,21 +139,31 @@ for _, i := range result.Items {
     }
     numItems++
 }
-infom := TableInfo{"CentroBus", numItems}
-fmt.Println("i =" , infom, "")
+// infom := TableInfo{"CentroBus", numItems}
+inf2 := map[string]interface{}{"Name of Table" : "CentroBus", "Records" : numItems}
+// inf3 := []byte(`{"TableName":"CentroBus", "Records" : 48`)
+// fmt.Println("i =" , infom, "")
 // json.NewEncoder(w).Encode(infom)
-i2, err := json.Marshal(infom)
-fmt.Println(i2)
-b := []byte(`{"tableName":"CentroBus","recordCount":48}`)
-w.Write(b)
+// i2, err := json.Marshal(infom)
+// fmt.Println("i2 =" , i2, "")
+// fmt.Println("i3 =" , inf2, "")
+// fmt.Println("i4 =" , inf3, "")
+// b := []byte(`{"tableName":"CentroBus","recordCount":48}`)
+// json.NewEncoder(w).Encode(infom)
+// json.NewEncoder(w).Encode(i2)
+json.NewEncoder(w).Encode(inf2)
+// json.NewEncoder(w).Encode(inf3)
+
 }
 
 func main(){
 	///mux router///
 	r := mux.NewRouter()
+    fmt.Println("Starting")
+	r.HandleFunc("/rcollin3/all",getall).Methods("GET")
 
-	r.HandleFunc("/804734362/all",getall).Methods("GET")
-	r.HandleFunc("/804734362/status",getstatus).Methods("GET")
+	r.HandleFunc("/rcollin3/status",getstatus).Methods("GET")
 
-	log.Fatal(http.ListenAndServe(":9050",r))
+	log.Fatal(http.ListenAndServe(":8080",r))
+
 }

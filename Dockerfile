@@ -2,7 +2,7 @@
 FROM golang:latest AS build
 
 # Copy source
-WORKDIR /go/src/go-docker
+WORKDIR /go/src/go-docker/server
 COPY . .
 
 # Get required modules (assumes packages have been added to ./vendor)
@@ -16,18 +16,20 @@ FROM alpine:latest
 
 # Add support for HTTPS and time zones
 RUN apk update && \
-    apk upgrade
+    apk upgrade && \
+    apk add ca-certificates
 
 WORKDIR /root/
 
 # Copy files from previous build container
-#COPY --from=build /go/src/my-golang-source-code/main ./
+COPY --from=build /go/src/go-docker/server/main ./
 
 # Add environment variables
-# ENV ...
+ ENV AWS_ACCESS_KEY_ID=AKIAJ4HLHON3P3FHKHRQ 
+ ENV AWS_SECRET_ACCESS_KEY=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
 
 # Check results
 RUN env && pwd && find .
 
 # Start the application
-CMD ["./server"]
+CMD ["./main"]
