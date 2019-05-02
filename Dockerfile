@@ -25,8 +25,8 @@ WORKDIR /root/
 COPY --from=build /go/src/go-docker/server/main ./
 
 # Add environment variables
- ENV AWS_ACCESS_KEY_ID=AKIAJ4HLHON3P3FHKHRQ 
- ENV AWS_SECRET_ACCESS_KEY=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
+ ENV AWS_ACCESS_KEY_ID=AKIA34XNLPJYHZOTJRW7
+ ENV AWS_SECRET_ACCESS_KEY=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
 
 # Check results
 RUN env && pwd && find .
