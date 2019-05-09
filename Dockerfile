@@ -2,7 +2,7 @@
 FROM golang:latest AS build
 
 # Copy source
-WORKDIR /go/src/go-docker/server
+WORKDIR /go/src/go-docker/http
 COPY . .
 
 # Get required modules (assumes packages have been added to ./vendor)
@@ -22,11 +22,15 @@ RUN apk update && \
 WORKDIR /root/
 
 # Copy files from previous build container
-COPY --from=build /go/src/go-docker/server/main ./
+COPY --from=build /go/src/go-docker/http/main ./
 
 # Add environment variables
- ENV AWS_ACCESS_KEY_ID=AKIA34XNLPJYHZOTJRW7
- ENV AWS_SECRET_ACCESS_KEY=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
+ ENV AWS_ACCESS_KEY_ID=AKIA34XNLPJYGHRQ6YUF
+ ENV AWS_SECRET_ACCESS_KEY=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
+ ENV LOGGLY_TOKEN=7653fab5-7716-4ad3-8d33-b655e4ef3ced
+ ENV TOKEN=7653fab5-7716-4ad3-8d33-b655e4ef3ced
+
+EXPOSE 8080
 
 # Check results
 RUN env && pwd && find .
