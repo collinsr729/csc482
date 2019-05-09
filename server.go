@@ -2,12 +2,10 @@ package main
 
 import (
 	"os"
-	// "io/ioutil"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	// "time"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -140,20 +138,9 @@ func getstatus(w http.ResponseWriter, r *http.Request) {
 		}
 		numItems++
 	}
-	// infom := TableInfo{"CentroBus", numItems}
 	inf2 := map[string]interface{}{"Name of Table": "CentroBus", "Records": numItems}
-	// inf3 := []byte(`{"TableName":"CentroBus", "Records" : 48`)
-	// fmt.Println("i =" , infom, "")
-	// json.NewEncoder(w).Encode(infom)
-	// i2, err := json.Marshal(infom)
-	// fmt.Println("i2 =" , i2, "")
-	// fmt.Println("i3 =" , inf2, "")
-	// fmt.Println("i4 =" , inf3, "")
-	// b := []byte(`{"tableName":"CentroBus","recordCount":48}`)
-	// json.NewEncoder(w).Encode(infom)
-	// json.NewEncoder(w).Encode(i2)
+
 	json.NewEncoder(w).Encode(inf2)
-	// json.NewEncoder(w).Encode(inf3)
 
 }
 
